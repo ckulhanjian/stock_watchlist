@@ -2,8 +2,6 @@ from bs4 import BeautifulSoup
 import requests
 
 def main():
-    # watchlist = open("watchlist.txt", "a")
-    # watchlist
     while True:
         print('\nStock Options')
         menu_options= ['1. Check stock price', '2. Add stock to watchlist', '3. Remove stock from watchlist',
@@ -38,20 +36,40 @@ def main():
             cw = check_watchlist(stock_name)
             if cw == False:
                 # remove 
+                remove_line(stock_name)
+                pass
             if cw == True:
+                # true means not same
                 print('This stock is not in your watchlist.')
 
         if choice == 4:
-            print('Watchlist:')
-            watchlist = open("watchlist.txt", "r")
-            for x in watchlist:
-                symbol = get_stock_ticker(x)
-                price = stock_price(symbol)
-                print(f"{x.capitalize().strip()} {symbol} ${price}")
-            watchlist.close()
+            display_watchlist()
+        
         if choice == 5:
-            print('Goodbye')
+            print('\nSee you later!')
             break
+    return
+
+def display_watchlist():
+    print('Watchlist:')
+    watchlist = open("watchlist.txt", "r")
+    for x in watchlist:
+        symbol = get_stock_ticker(x)
+        price = stock_price(symbol)
+        print(f"{x.capitalize().strip()} {symbol} ${price}")
+    watchlist.close()
+    return
+
+def remove_line(stock_name):
+    watchlist = open("watchlist.txt", "r")
+    for x in watchlist:
+        watchlist = open("watchlist.txt", "w")
+        if x.strip() != stock_name.lower():
+            watchlist.write(x.strip())
+            watchlist.write('\n')
+    watchlist.close()
+    watchlist.close()
+    print('Stock has been removed.')
     return
 
 def check_watchlist(stock_name):
@@ -62,7 +80,6 @@ def check_watchlist(stock_name):
             return False
     watchlist.close()
     return True
-    
 
 def add_to_watch(stock_name):
     watchlist = open("watchlist.txt", "a")
